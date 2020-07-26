@@ -1,0 +1,15 @@
+version: '3'
+services:
+    ngircd:
+        build:
+            context: ngircd
+        container_name: ngircd
+        ports:
+            - "6667:6667"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./ngircd/ngircd.motd:/usr/local/etc/ngircd.motd:ro
+            - ./ngircd/ngircd.conf:/usr/local/etc/ngircd.conf:ro
+        environment:
+            TZ: "Asia/Tokyo"
+        #restart: always

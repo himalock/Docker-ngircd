@@ -1,0 +1,76 @@
+diff --git a/src/ngircd/defines.h b/src/ngircd/defines.h
+index ff8cd226..5d5dcdec 100644
+--- a/src/ngircd/defines.h
++++ b/src/ngircd/defines.h
+@@ -180,10 +180,10 @@
+ #endif
+ 
+ /** Supported user modes. */
+-#define USERMODES "abBcCFiIoqrRswx"
++#define USERMODES "abBcCFiIoqrswx"
+ 
+ /** Supported channel modes. */
+-#define CHANMODES "abehiIklmMnoOPqQrRstvVz"
++#define CHANMODES "abehiIklmMnoOPqQrstvVz"
+ 
+ /** Supported channel types. */
+ #define CHANTYPES "#&+"
+diff --git a/src/ngircd/irc-channel.c b/src/ngircd/irc-channel.c
+index 812429bb..a8cb4407 100644
+--- a/src/ngircd/irc-channel.c
++++ b/src/ngircd/irc-channel.c
+@@ -133,12 +133,12 @@ join_allowed(CLIENT *Client, CHANNEL *chan, const char *channame,
+ 		return false;
+ 	}
+ 
+-	if (Channel_HasMode(chan, 'R') && !Client_HasMode(Client, 'R')) {
+-		/* Only registered users are allowed! */
+-		IRC_WriteErrClient(Client, ERR_REGONLYCHANNEL_MSG,
+-				   Client_ID(Client), channame);
+-		return false;
+-	}
++//	if (Channel_HasMode(chan, 'R') && !Client_HasMode(Client, 'R')) {
++//		/* Only registered users are allowed! */
++//		IRC_WriteErrClient(Client, ERR_REGONLYCHANNEL_MSG,
++//				   Client_ID(Client), channame);
++//		return false;
++//	}
+ 
+ 	return true;
+ } /* join_allowed */
+diff --git a/src/ngircd/irc-mode.c b/src/ngircd/irc-mode.c
+index 99255df1..9d98be29 100644
+--- a/src/ngircd/irc-mode.c
++++ b/src/ngircd/irc-mode.c
+@@ -256,14 +256,14 @@ Client_Mode( CLIENT *Client, REQUEST *Req, CLIENT *Origin, CLIENT *Target )
+ 							ERR_RESTRICTED_MSG,
+ 							Client_ID(Origin));
+ 			break;
+-		case 'R': /* Registered (not [un]settable by clients) */
+-			if (Client_Type(Client) == CLIENT_SERVER)
+-				x[0] = 'R';
+-			else
+-				ok = IRC_WriteErrClient(Origin,
+-							ERR_NICKREGISTER_MSG,
+-							Client_ID(Origin));
+-			break;
++//		case 'R': /* Registered (not [un]settable by clients) */
++//			if (Client_Type(Client) == CLIENT_SERVER)
++//				x[0] = 'R';
++//			else
++//				ok = IRC_WriteErrClient(Origin,
++//							ERR_NICKREGISTER_MSG,
++//							Client_ID(Origin));
++//			break;
+ 		case 'x': /* Cloak hostname */
+ 			if (Client_HasMode(Client, 'r'))
+ 				ok = IRC_WriteErrClient(Origin,
+@@ -565,7 +565,7 @@ Channel_Mode(CLIENT *Client, REQUEST *Req, CLIENT *Origin, CHANNEL *Channel)
+ 		client = NULL;
+ 		switch (*mode_ptr) {
+ 		/* --- Channel modes --- */
+-		case 'R': /* Registered users only */
++//		case 'R': /* Registered users only */
+ 		case 's': /* Secret channel */
+ 		case 'z': /* Secure connections only */
+ 			if(!is_oper && !is_machine && !is_owner &&
