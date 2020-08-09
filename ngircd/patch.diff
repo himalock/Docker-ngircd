@@ -16,10 +16,10 @@ index ff8cd226..5d5dcdec 100644
  /** Supported channel types. */
  #define CHANTYPES "#&+"
 diff --git a/src/ngircd/irc-channel.c b/src/ngircd/irc-channel.c
-index 812429bb..a8cb4407 100644
+index 812429bb..3373ff8f 100644
 --- a/src/ngircd/irc-channel.c
 +++ b/src/ngircd/irc-channel.c
-@@ -133,12 +133,12 @@ join_allowed(CLIENT *Client, CHANNEL *chan, const char *channame,
+@@ -133,13 +133,6 @@ join_allowed(CLIENT *Client, CHANNEL *chan, const char *channame,
  		return false;
  	}
  
@@ -29,20 +29,15 @@ index 812429bb..a8cb4407 100644
 -				   Client_ID(Client), channame);
 -		return false;
 -	}
-+//	if (Channel_HasMode(chan, 'R') && !Client_HasMode(Client, 'R')) {
-+//		/* Only registered users are allowed! */
-+//		IRC_WriteErrClient(Client, ERR_REGONLYCHANNEL_MSG,
-+//				   Client_ID(Client), channame);
-+//		return false;
-+//	}
- 
+-
  	return true;
  } /* join_allowed */
+ 
 diff --git a/src/ngircd/irc-mode.c b/src/ngircd/irc-mode.c
-index 99255df1..9d98be29 100644
+index 99255df1..01146cba 100644
 --- a/src/ngircd/irc-mode.c
 +++ b/src/ngircd/irc-mode.c
-@@ -256,14 +256,14 @@ Client_Mode( CLIENT *Client, REQUEST *Req, CLIENT *Origin, CLIENT *Target )
+@@ -256,14 +256,6 @@ Client_Mode( CLIENT *Client, REQUEST *Req, CLIENT *Origin, CLIENT *Target )
  							ERR_RESTRICTED_MSG,
  							Client_ID(Origin));
  			break;
@@ -54,23 +49,27 @@ index 99255df1..9d98be29 100644
 -							ERR_NICKREGISTER_MSG,
 -							Client_ID(Origin));
 -			break;
-+//		case 'R': /* Registered (not [un]settable by clients) */
-+//			if (Client_Type(Client) == CLIENT_SERVER)
-+//				x[0] = 'R';
-+//			else
-+//				ok = IRC_WriteErrClient(Origin,
-+//							ERR_NICKREGISTER_MSG,
-+//							Client_ID(Origin));
-+//			break;
  		case 'x': /* Cloak hostname */
  			if (Client_HasMode(Client, 'r'))
  				ok = IRC_WriteErrClient(Origin,
-@@ -565,7 +565,7 @@ Channel_Mode(CLIENT *Client, REQUEST *Req, CLIENT *Origin, CHANNEL *Channel)
+@@ -565,7 +557,6 @@ Channel_Mode(CLIENT *Client, REQUEST *Req, CLIENT *Origin, CHANNEL *Channel)
  		client = NULL;
  		switch (*mode_ptr) {
  		/* --- Channel modes --- */
 -		case 'R': /* Registered users only */
-+//		case 'R': /* Registered users only */
  		case 's': /* Secret channel */
  		case 'z': /* Secure connections only */
  			if(!is_oper && !is_machine && !is_owner &&
+diff --git a/src/ngircd/messages.h b/src/ngircd/messages.h
+index 76a04ff9..df58a978 100644
+--- a/src/ngircd/messages.h
++++ b/src/ngircd/messages.h
+@@ -22,7 +22,7 @@
+ #define RPL_CREATED_MSG			"003 %s :This server has been started %s"
+ #define RPL_MYINFO_MSG			"004 %s %s ngircd-%s %s %s"
+ #define RPL_ISUPPORTNET_MSG		"005 %s NETWORK=%s :is my network name"
+-#define RPL_ISUPPORT1_MSG		"005 %s RFC2812 IRCD=ngIRCd CHARSET=UTF-8 CASEMAPPING=ascii PREFIX=(qaohv)~&@%%+ CHANTYPES=%s CHANMODES=beI,k,l,imMnOPQRstVz CHANLIMIT=%s:%d :are supported on this server"
++#define RPL_ISUPPORT1_MSG		"005 %s RFC2812 IRCD=ngIRCd CHARSET=UTF-8 CASEMAPPING=ascii PREFIX=(qaohv)~&@%%+ CHANTYPES=%s CHANMODES=beI,k,l,imMnOPQstVz CHANLIMIT=%s:%d :are supported on this server"
+ #define RPL_ISUPPORT2_MSG		"005 %s CHANNELLEN=%d NICKLEN=%d TOPICLEN=%d AWAYLEN=%d KICKLEN=%d MODES=%d MAXLIST=beI:%d EXCEPTS=e INVEX=I PENALTY FNC :are supported on this server"
+ 
+ #define RPL_TRACELINK_MSG		"200 %s Link %s-%s %s %s V%s %ld %d %d"
