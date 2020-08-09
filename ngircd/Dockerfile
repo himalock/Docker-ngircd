@@ -29,10 +29,7 @@ FROM alpine:latest
 COPY --from=builder /usr/local/sbin/ngircd /usr/local/sbin/ngircd
 COPY --from=builder /usr/local/etc/ngircd.conf /usr/local/etc/ngircd.conf
 
-RUN apk add --no-cache tzdata && \
-    cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && \
-    #ユーザーで実行しろと怒られるので
-    addgroup ngircd && \
+RUN addgroup ngircd && \
     adduser -s /bin/sh -S -G ngircd ngircd && \
     touch /usr/local/etc/ngircd.motd && \
     chmod 644 /usr/local/etc/ngircd.*
