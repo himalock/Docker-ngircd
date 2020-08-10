@@ -8,6 +8,5 @@ services:
             - "6667:6667"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - ./ngircd/ngircd.motd:/usr/local/etc/ngircd.motd:ro
-            - ./ngircd/ngircd.conf:/usr/local/etc/ngircd.conf:ro
+            - ./ngircd:/usr/local/etc
         #restart: always
